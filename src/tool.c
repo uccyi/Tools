@@ -1,5 +1,38 @@
 ﻿#include "../include/tool.h"
 
+int my_atoi(char *str, int *n){
+	long sl;
+	char *end_ptr;
+
+	errno = 0;
+	sl = strtol(str, &end_ptr, 10);
+
+	if ((sl == LONG_MIN || sl == LONG_MAX) && errno != 0){
+		perror("strtol error");
+		return EXIT_FAILURE;
+	}
+	else if (end_ptr == str){
+		fprintf(stderr, "No digits were found\n");
+		return EXIT_FAILURE;
+	}
+	else if (sl > INT_MAX){
+		fprintf(stderr, "%ld too large!\n", sl);
+		return EXIT_FAILURE;
+	}
+	else if (sl < INT_MIN){
+		fprintf(stderr, "%ld too small!\n", sl);
+		return EXIT_FAILURE;
+	}
+	else if (*end_ptr != '\0'){
+		fprintf(stderr, "Further characters after number: %s\n", end_ptr);
+		return EXIT_FAILURE;
+	}
+
+	*n = (int)sl;
+
+	return EXIT_SUCCESS;
+}
+
 FILE* my_fopen(const char *_Filename, const char *_Mode)
 {
 	FILE*fp;
